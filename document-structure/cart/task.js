@@ -16,21 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const productImage = productElement.querySelector('.product__image').src;
         const productCount = parseInt(productElement.querySelector('.product__quantity-value').textContent);
 
-        const cartProduct = document.createElement('div');
-        cartProduct.className = 'cart__product';
-        cartProduct.setAttribute('data-id', productId);
-
-        const img = document.createElement('img');
-        img.className = 'cart__product-image';
-        img.src = productImage;
-
-        const count = document.createElement('div');
-        count.className = 'cart__product-count';
-        count.textContent = productCount;
-
-        cartProduct.appendChild(img);
-        cartProduct.appendChild(count);
-        cartProductsContainer.appendChild(cartProduct);
+        cartProductsContainer.insertAdjacentHTML('afterbegin', `
+            <div class="cart__product" data-id="${productId}">
+                <img class="cart__product-image" src = "${productImage}"></img>
+                <div class="cart__product-count">${productCount}</div>
+            </div>
+        `);
     };
 
     document.querySelectorAll('.product__quantity-control').forEach(control => {

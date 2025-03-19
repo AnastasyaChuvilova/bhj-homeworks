@@ -4,45 +4,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const tasksList = document.getElementById('tasks__list');
 
     const addTask = (taskTitle) => {
-        const task = document.createElement('div');
-        task.className = 'task';
+        if (!taskTitle) return;
 
-        const title = document.createElement('div');
-        title.className = 'task__title';
-        title.textContent = taskTitle;
-
-        const removeLink = document.createElement('a');
-        removeLink.href = '#';
-        removeLink.className = 'task__remove';
-        removeLink.innerHTML = '&times;';
-
-        removeLink.addEventListener('click', (event) => {
-            event.preventDefault();
-            tasksList.removeChild(task);
-        });
-
-        task.appendChild(title);
-        task.appendChild(removeLink);
-        tasksList.appendChild(task);
+        tasksList.insertAdjacentHTML('afterbegin', `
+            <div class="task">
+                <div class="task__title">
+                    ${taskTitle}
+                </div>
+                <a href="#" class="task__remove">&times;</a>
+            </div>
+        `);
     };
 
-    form.addEventListener('submit', (event) => {
-        event.preventDefault(); 
-        const taskTitle = input.value.trim();
-        if (taskTitle) {
-            addTask(taskTitle);
-            input.value = '';
+    tasksList.addEventListener('click', (event) => {
+        if (event.target.classList.contains('task__remove')) {
+            event.preventDefault();
+            const task = event.target.closest('.task');
+            if (task) {
+                tasksList.removeChild(task);
+            }
         }
     });
 
-    input.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault(); 
-            const taskTitle = input.value.trim();
-            if (taskTitle) {
-                addTask(taskTitle);
-                input.value = ''; 
-            }
-        }
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const taskTitle = input.value.trim();
+        addTask(taskTitle);
+        input.value = ''; 
     });
 });
